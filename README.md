@@ -37,6 +37,12 @@ Content-Type: text/plain
 Крутая реклама:/ru/svrd
 ```
 
+Или в консоль:
+
+```bash
+Invoke-RestMethod -Uri "http://localhost:7268/upload" -Method Post -InFile "ads.txt" -ContentType "text/plain"
+```
+
 Ответ:
 ```json
 "Data loaded"
