@@ -14,6 +14,11 @@
    ```bash
    dotnet run --project AdService --urls "http://localhost:7268"
    ```
+
+3. Тестирование:
+   ```bash
+   dotnet test
+   ```
 ---
 
 ##  REST API
@@ -45,8 +50,17 @@ GET /search?location=/ru/svrd/revda
 Ответ:
 ```json
 [
-  "Яндекс.Директ",
-  "Ревдинский рабочий",
-  "Крутая реклама"
+   "Крутая реклама",
+   "Ревдинский рабочий",
+   "Яндекс.Директ"
 ]
+```
+
+---
+
+##  Тесты
+
+Юнит-тесты написаны на **xUnit**. Запуск:
+```bash
+dotnet test
 ```
