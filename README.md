@@ -36,3 +36,17 @@ Content-Type: text/plain
 ```json
 "Data loaded"
 ```
+
+### 2. Поиск площадок для локации
+```http
+GET /search?location=/ru/svrd/revda
+```
+
+Ответ:
+```json
+[
+  "Яндекс.Директ",
+  "Ревдинский рабочий",
+  "Крутая реклама"
+]
+```

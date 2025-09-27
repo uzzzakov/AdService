@@ -52,7 +52,6 @@ public class AdPlatformRepository
             }
         }
 
-        // финализируем — массивы и сортировка для детерминированности
         var final = new Dictionary<string, string[]>(StringComparer.OrdinalIgnoreCase);
         foreach (var kv in tmp)
         {
@@ -65,6 +64,40 @@ public class AdPlatformRepository
         {
             _map = final; // атомарная замена ссылки
         }
+    }
+
+    /// <summary>
+    /// Возвращает список площадок для заданной локации.
+    /// Алгоритм: ищем платформы для самой локации и для всех её родителей (ancestors).
+    /// Например, для /ru/svrd/revda проверяем /ru/svrd/revda, /ru/svrd, /ru.
+    /// </summary>
+    public IReadOnlyList<string> FindPlatforms(string location)
+    {
+        if (string.IsNullOrWhiteSpace(location)) return Array.Empty<string>();
+        var loc = NormalizeLocation(location);
+        if (loc == null) return Array.Empty<string>();
+
+        var map = _map; // локальная копия ссылки (без блокировок на чтение)
+        var parts = loc.Split('/', StringSplitOptions.RemoveEmptyEntries);
+        var resultSet = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+
+        for (int i = parts.Length; i >= 1; i--)
+        {
+            var prefix = "/" + string.Join('/', parts.Take(i));
+            if (map.TryGetValue(prefix, out var arr))
+            {
+                foreach (var p in arr) resultSet.Add(p);
+            }
+        }
+
+        if (map.TryGetValue("/", out var rootArr))
+        {
+            foreach (var p in rootArr) resultSet.Add(p);
+        }
+
+        var result = resultSet.ToArray();
+        Array.Sort(result, StringComparer.OrdinalIgnoreCase);
+        return result;
     }
 
     private static string? NormalizeLocation(string input)

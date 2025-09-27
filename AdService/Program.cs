@@ -35,4 +35,14 @@ app.MapPost("/upload", async (HttpRequest request, AdPlatformRepository repo) =>
     }
 });
 
+// GET /search?location=/ru/svrd/revda
+app.MapGet("/search", (string location, AdPlatformRepository repo) =>
+{
+    if (string.IsNullOrWhiteSpace(location))
+        return Results.BadRequest(new { error = "location is required, e.g. /ru/svrd" });
+
+    var platforms = repo.FindPlatforms(location.Trim());
+    return Results.Ok(platforms);
+});
+
 app.Run();
